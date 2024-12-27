@@ -1,5 +1,18 @@
 # This is a modification of https://github.com/psbtok/python-projects/blob/master/2048/2048.py.
-from msvcrt import getch
+try:
+    from msvcrt import getch
+except ImportError:
+	import sys
+	import tty
+	import termios
+	def getch():
+			fd = sys.stdin.fileno()
+			old = termios.tcgetattr(fd)
+			try:
+				tty.setraw(fd)
+				return sys.stdin.read(1)
+			finally:
+				termios.tcsetattr(fd, termios.TCSADRAIN, old)
 import random
 import math
 import os

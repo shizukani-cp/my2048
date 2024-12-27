@@ -212,7 +212,7 @@ class game():
 		self.table[row][col] = new_num
 
 	def clear(self):
-		os.system("cls")
+		print("\x1b[2J")
 
 	def save_score(self):
 		with open(self.file_path, 'r') as f:

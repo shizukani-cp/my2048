@@ -6,13 +6,13 @@ except ImportError:
 	import tty
 	import termios
 	def getch():
-			fd = sys.stdin.fileno()
-			old = termios.tcgetattr(fd)
-			try:
-				tty.setraw(fd)
-				return sys.stdin.read(1)
-			finally:
-				termios.tcsetattr(fd, termios.TCSADRAIN, old)
+		fd = sys.stdin.fileno()
+		old = termios.tcgetattr(fd)
+		try:
+			tty.setraw(fd)
+			return sys.stdin.read(1)
+		finally:
+			termios.tcsetattr(fd, termios.TCSADRAIN, old)
 import random
 import math
 import os

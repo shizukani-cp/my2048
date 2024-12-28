@@ -20,13 +20,25 @@ import os
 class game():
 	def __init__(self):
 		self.clear()
-		self.file_path   = 'scores.txt'
+		self.scores_file_path = 'scores.txt'
+		self.board_file_path  = "table.txt"
 		self.score       = 0
 		#self.n is the size of the table
 		self.n           = 4
+		self.RANDOM_NUMS = [2, 4]
+		if os.path.isfile(self.board_file_path) and (os.path.getsize(self.board_file_path) > 0):
+			with open(self.board_file_path, "r") as f:
+				lines = f.readlines()
+				self.score = int(lines[0])
+				self.table = [[int(n) for n in line.split()] for line in lines[1:]]
+		else:
+			self.generate_table()
+		self.gameplay()
+
+	def generate_table(self):
 		self.table       = [[0 for _ in range(0, self.n)] for _ in range(0, self.n)]
 		self.empty       = [[0 for _ in range(0, self.n)] for _ in range(0, self.n)]
-		self.RANDOM_NUMS = [2, 4]
+
 		first_num_row    = random.randint(0, self.n-1)
 		first_num_col	 = random.randint(0, self.n-1)
 		first_num        = random.choice(self.RANDOM_NUMS)
@@ -40,8 +52,6 @@ class game():
 
 		self.table[first_num_row][first_num_col]   = first_num
 		self.table[second_num_row][second_num_col] = second_num
-
-		self.gameplay()
 
 	def gameplay(self):
 		self.show_table()
@@ -66,7 +76,7 @@ class game():
 				else:
 					Cont = True
 			elif first == 113:
-				self.quit()
+				self.quit(True)
 			else:
 				Cont = True
 
@@ -112,7 +122,7 @@ class game():
 		if table_name == self.table:
 			if copy_table == self.table:
 				if self.empty_slots() == [] and not self.can_move():
-					self.quit()
+					self.quit(False)
 			else:
 				self.add_random()
 				self.show_table()
@@ -215,24 +225,38 @@ class game():
 		print("\x1b[2J")
 
 	def save_score(self):
-		with open(self.file_path, 'r') as f:
+		with open(self.scores_file_path, 'r') as f:
 			scores  = [(line.rstrip('\n')) for line in f.readlines()]
 		scores      = [int(score) for score in scores]
 		scores_copy = scores.copy()
 		scores.append(self.score)
 		scores      = sorted(scores, reverse = True)
 		del(scores[-1])
-		with open(self.file_path, 'w') as f:
+		with open(self.scores_file_path, 'w') as f:
 			for score in scores:
 				f.write(str(score) + '\n')
 		f.close()
 		if (scores_copy != scores):
 			print('Your score has been saved')
 
-	def quit(self):
+	def save_board(self):
+		with open(self.board_file_path, "w") as f:
+			f.write(str(self.score))
+			f.write("\n")
+			f.write("\n".join([" ".join([str(n) for n in row]) for row in self.table]))
+
+	def clear_board_file(self):
+		with open(self.board_file_path, "w") as f:
+			f.write("")
+
+	def quit(self, more):
 		self.show_table()
-		print('\nGame end')
-		self.save_score()
+		if more:
+			self.save_board()
+		else:
+			print('\nGame end')
+			self.save_score()
+			self.clear_board_file()
 		print('*** Shutting down ***')
 		exit(0)
 

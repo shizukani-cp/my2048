@@ -77,6 +77,8 @@ class game():
 					Cont = True
 			elif first == 113:
 				self.quit(True)
+			elif first == 110:
+				self.quit(False)
 			else:
 				Cont = True
 
@@ -261,4 +263,5 @@ class game():
 		exit(0)
 
 if __name__ == '__main__':
-	a=game()
+	while True:
+		game()

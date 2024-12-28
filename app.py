@@ -75,6 +75,14 @@ class game():
 					self.move(self.left,  self.table)
 				else:
 					Cont = True
+			elif first == 119:
+				self.move(self.up,    self.table)
+			elif first == 97:
+				self.move(self.left,  self.table)
+			elif first == 115:
+				self.move(self.down,  self.table)
+			elif first == 100:
+				self.move(self.right, self.table)
 			elif first == 113:
 				self.quit(True)
 			elif first == 110:

@@ -1,8 +1,9 @@
 # This is a modification of https://github.com/psbtok/python-projects/blob/master/2048/2048.py.
+import random, math, os, sys
+from pathlib import Path
 try:
     from msvcrt import getch
 except ImportError:
-	import sys
 	import tty
 	import termios
 	def getch():
@@ -13,9 +14,6 @@ except ImportError:
 			return sys.stdin.read(1)
 		finally:
 			termios.tcsetattr(fd, termios.TCSADRAIN, old)
-import random
-import math
-import os
 
 class game():
 	def __init__(self):
@@ -235,9 +233,12 @@ class game():
 		print("\x1b[2J")
 
 	def save_score(self):
-		with open(self.scores_file_path, 'r') as f:
-			scores  = [(line.rstrip('\n')) for line in f.readlines()]
-		scores      = [int(score) for score in scores]
+		if os.path.isfile(self.scores_file_path):
+			with open(self.scores_file_path, 'r') as f:
+				scores  = [(line.rstrip('\n')) for line in f.readlines()]
+			scores      = [int(score) for score in scores]
+		else:
+			scores      = [0]
 		scores_copy = scores.copy()
 		scores.append(self.score)
 		scores      = sorted(scores, reverse = True)
@@ -268,7 +269,7 @@ class game():
 			self.save_score()
 			self.clear_board_file()
 		print('*** Shutting down ***')
-		exit(0)
+		sys.exit(0)
 
 if __name__ == '__main__':
 	while True:

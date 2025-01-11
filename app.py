@@ -1,5 +1,5 @@
 # This is a modification of https://github.com/psbtok/python-projects/blob/master/2048/2048.py.
-import random, math, os, sys
+import random, math, os, sys, itertools
 from pathlib import Path
 try:
     from msvcrt import getch
@@ -89,19 +89,20 @@ class game():
 				Cont = True
 
 	def show_table(self):
+		column_width = len(str(max(itertools.chain.from_iterable(self.table))))
+		first_line = ("+" + "-" * column_width) * 4
 		self.clear()
-		first_line = "+----" * 4
 		print(first_line[:(len(first_line)-len(str(self.score)))], self.score, "+", sep="")
 		for i in range(self.n):
 			for j in range(self.n):
-				print("|", self.get_color_from_num(self.table[i][j]), " " * (4 - len(str(self.table[i][j]))), sep="", end="")
+				print("|", self.get_color_from_num(self.table[i][j]), " " * (column_width - len(str(self.table[i][j]))), sep="", end="")
 				if self.table[i][j]:
 					print(self.table[i][j], end="\x1b[0m")
 				else:
 					print(".", end="\x1b[0m")
 				if (self.n == j+1):
 					print("|")
-			print("+----" * 4 + "+")
+			print(("+" + "-" * column_width) * 4 + "+")
 
 	def get_color_from_num(self, number):
 		if number == 0:
